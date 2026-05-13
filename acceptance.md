@@ -1,23 +1,21 @@
 # Acceptance Criteria
 
-## Task 1: Runtime support library (boil package)
+## Task 1: Runtime support library (orm package) — DONE
+
+## Task 2: Query building system
 
 ### Acceptance Criteria
-- [ ] Executor interface defines Exec, Query, QueryRow methods for basic SQL execution
-- [ ] ContextExecutor interface adds ExecContext, QueryContext, QueryRowContext methods
-- [ ] Transactor interface adds Commit and Rollback to Executor
-- [ ] Beginner interface provides Begin() method, ContextBeginner provides BeginTx()
-- [ ] SetDB stores a global executor; GetDB retrieves it; if the executor also implements ContextExecutor, GetContextDB returns it
-- [ ] SetLocation stores a timezone for timestamps; GetLocation retrieves it; defaults to UTC
-- [ ] Column selection None() returns empty set; Infer() means auto-detect; Whitelist specifies exact columns; Blacklist excludes columns; Greylist adds to inferred
-- [ ] InsertColumnSet correctly computes insert columns and return columns for each column strategy (None, Infer, Whitelist, Blacklist, Greylist)
-- [ ] UpdateColumnSet correctly computes update columns for each strategy, excluding primary key columns
-- [ ] HookPoint constants exist for BeforeInsert, BeforeUpdate, BeforeDelete, BeforeUpsert, AfterInsert, AfterSelect, AfterUpdate, AfterDelete, AfterUpsert
-- [ ] SkipHooks returns a context that causes HooksAreSkipped to return true
-- [ ] SkipTimestamps returns a context that causes TimestampsAreSkipped to return true
-- [ ] DebugMode global flag defaults to false; DebugWriter defaults to os.Stdout
-- [ ] WithDebug/IsDebug work per-context, falling back to global DebugMode
-- [ ] WithDebugWriter/DebugWriterFrom work per-context, falling back to global DebugWriter
-- [ ] WrapErr wraps an error; IsBoilErr correctly identifies wrapped errors
-- [ ] Begin() panics if global DB doesn't implement Beginner; works if it does
-- [ ] BeginTx() panics if global DB doesn't implement ContextBeginner; works if it does
+- [ ] A Query struct accumulates SQL query state: select columns, from tables, joins, where clauses, group by, order by, having, limit, offset, distinct, for lock, comment
+- [ ] A Dialect struct configures quoting characters (LQ, RQ), placeholder style (indexed vs ?), and SQL flavor flags (UseTopClause, UseOutputClause, etc.)
+- [ ] QueryMod interface defines Apply(*Query) for composable modifiers
+- [ ] Query mods exist for: SQL (raw), Select, From, Where, Or, InnerJoin, LeftOuterJoin, RightOuterJoin, FullOuterJoin, GroupBy, OrderBy, Having, Limit, Offset, Distinct, For, Comment, Load, With, WhereIn, WhereNotIn, OrIn, OrNotIn
+- [ ] BuildQuery generates correct SELECT SQL with proper column quoting and placeholder conversion
+- [ ] BuildQuery generates correct DELETE SQL with WHERE clauses
+- [ ] BuildQuery generates correct UPDATE SQL with SET clauses and WHERE conditions
+- [ ] Placeholder conversion handles indexed placeholders ($1, $2) for Postgres-style dialects
+- [ ] WHERE clause generation supports AND/OR connectors, parentheses grouping, IN/NOT IN with argument expansion
+- [ ] Raw SQL queries bypass the builder and pass through directly
+- [ ] LIMIT/OFFSET handled correctly including MSSQL-style TOP/OFFSET FETCH syntax
+- [ ] Join clauses generate correct INNER/LEFT/RIGHT/FULL OUTER JOIN SQL
+- [ ] CTE (WITH) clauses are prepended correctly
+- [ ] SQL comments are prepended as -- prefix
