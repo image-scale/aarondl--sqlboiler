@@ -1,0 +1,16 @@
+# Todo
+
+## Plan
+Build from the lowest dependency layers upward. Start with the runtime support library (boil), then query building, then types, then driver abstractions, then import management, and finally the code generation engine. Each task delivers a testable functional module.
+
+## Tasks
+- [ ] Task 1: Implement the runtime support library with database executor interfaces, global DB handle management, column selection strategies (infer/whitelist/blacklist/greylist), lifecycle hook points with context-based skip, debug logging with per-context and global modes, error wrapping, and timestamp location management.
+- [ ] Task 2: Implement the query building system with a composable Query type that accumulates SELECT/UPDATE/DELETE state, a query mod interface for chaining conditions (Where, Select, From, Join, GroupBy, OrderBy, Limit, Offset, Having, Distinct, Load, etc.), and SQL generation that produces dialect-aware query strings with proper placeholder handling.
+- [ ] Task 3: Implement the reflection-based result binding system that maps SQL rows into Go structs or slices of structs using struct tag introspection, supporting nested struct navigation, column-to-field mapping with caching, and value comparison/assignment utilities.
+- [ ] Task 4: Implement the eager loading system that recursively loads related objects after initial queries by dynamically calling generated Load methods on model structs, supporting nested relationship paths and per-relationship query modifiers.
+- [ ] Task 5: Implement the query mod helper package providing type-safe WHERE clause construction with comparison operators (EQ, NEQ, LT, LTE, GT, GTE), nullable column handling (IS NULL / IS NOT NULL), and a non-zero default detection helper for insert operations.
+- [ ] Task 6: Implement the database type mappings for PostgreSQL arrays (bool, int64, float64, string, bytes, decimal arrays with proper scanning/valuing), JSON column type, byte column type, hstore map type, and arbitrary-precision decimal types (both nullable and non-nullable).
+- [ ] Task 7: Implement the driver abstraction layer with the driver interface, constructor interface for table metadata retrieval, table/column/primary key/foreign key type definitions, relationship detection from foreign keys (to-one and to-many including join tables), driver configuration with typed accessors, driver registration, and binary driver protocol for out-of-process drivers.
+- [ ] Task 8: Implement the import management system that controls which Go imports appear in generated files, supporting per-file imports, per-column-type imports, singleton imports, standard vs third-party separation, and merging of import collections.
+- [ ] Task 9: Implement the code generation engine configuration and alias system, including the master config struct with all feature flags and settings, alias resolution that maps database names to Go identifiers, and text helper functions for deriving relationship names from foreign key metadata.
+- [ ] Task 10: Implement the code generation engine template loading and output pipeline, including template discovery from filesystem and embedded sources, template data preparation, singleton and per-table template execution, output file writing with Go source formatting, and the main orchestration state machine.
